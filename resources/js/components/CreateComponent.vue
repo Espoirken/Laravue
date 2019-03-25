@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Create A Post</h1>
-    <form @submit.prevent="addPost">
+    <form @submit.prevent="addPost" enctype="multipart/form-data">
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
@@ -19,15 +19,15 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-md-3" v-if="image">
+            <img :src="image" class="img-responsive" height="70" width="90">
+          </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label>Upload Image:</label>
-                <input type="file" v-on:change="onImageChange" class="form-control">
+                <input type="file" @change="onImageChange" class="form-control">
             </div>
         </div>
-        </div>
-        <div class="form-group">
-            <button type="button" class="btn btn-sm btn-success" @click="uploadImage">Upload Image</button>
         </div>
         <div class="form-group">
           <button class="btn btn-primary">Create</button>
@@ -52,24 +52,24 @@
         });
       },
       onImageChange(e) {
-                let files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-                this.createImage(files[0]);
-        },
-        createImage(file) {
-            let reader = new FileReader();
-            let vm = this;
-            reader.onload = (e) => {
-                vm.image = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        },
-        uploadImage(){
-            axios.post('/image/upload',{image: this.image}).then(response => {
-                console.log(response);
-            });
-        }
+          let files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+            return;
+          this.createImage(files[0]);
+      },
+      createImage(file) {
+          let reader = new FileReader();
+          let vm = this;
+          reader.onload = (e) => {
+              vm.image = e.target.result;
+          };
+          reader.readAsDataURL(file);
+      },
+      uploadImage(){
+          axios.post('/image/upload',{image: this.image}).then(response => {
+              console.log(response);
+          });
+      }
     }
   }
 </script>

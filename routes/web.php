@@ -20,3 +20,6 @@ Route::get('/{any}', function () {
 })->where('any', '.*');
 
 Route::post('/image/upload', 'PostController@upload');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

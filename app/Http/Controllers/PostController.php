@@ -10,14 +10,22 @@ class PostController extends Controller
 {
     public function store(Request $request)
     {
-      $post = new Post([
-        'title' => $request->get('title'),
-        'body' => $request->get('body')
-      ]);
+		if($request->get('image'))
+        {
+            $image = $request->get('image');
+            $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('image'))->save(public_path('images/').$name);
+        }
+		
+	   	$post = new Post([
+			'title' => $request->get('title'),
+			'body' => $request->get('body'),
+        ]);
+        $name = $request->get('image');
+		$post->image_name = $name;
+      	$post->save();
 
-      $post->save();
-
-      return response()->json('success');
+	  	return response()->json('success');
     }
 
     public function index()
@@ -58,7 +66,7 @@ class PostController extends Controller
           \Image::make($request->get('image'))->save(public_path('images/').$name);
         }
 
-       $image= new FileUpload();
+       $image= new Post();
        $image->image_name = $name;
        $image->save();
 
